@@ -1,3 +1,5 @@
 # Experiment_cost_minimisation
 
-### This repository contains different flexible ways to minimise the experiment cost
+### This repository has following purposes
+1. Efficient exploration for experiments
+2. Minimizing expensive experiment(s) cost 
