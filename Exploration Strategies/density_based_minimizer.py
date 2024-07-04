@@ -63,8 +63,8 @@ class ExplorationSystem:
         # Step 5 & 6: Actor chooses the best input
         actions = self.actor(actor_inputs)
 
-        # Select the action with the lowest density
-        best_action_idx = torch.argmin(densities)
+        # Select the action with the highest density
+        best_action_idx = torch.argmax(densities)
         best_action = actions[best_action_idx]
 
         return best_action, densities
