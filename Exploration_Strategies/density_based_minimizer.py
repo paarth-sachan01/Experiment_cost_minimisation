@@ -5,35 +5,14 @@ import numpy as np
 from collections import deque
 import random
 
-class WorldModel(nn.Module):
-    def __init__(self, state_dim, action_dim, hidden_dim=128):
-        super(WorldModel, self).__init__()
-        self.network = nn.Sequential(
-            nn.Linear(state_dim + action_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, state_dim)
-        )
-    
-    def forward(self, state, action):
-        x = torch.cat([state, action], dim=-1)
-        return self.network(x)
+#################### IMPORTING DEMO MODELS FOR SIMPLE RUN
+###################
 
-class EnergyModel(nn.Module):
-    def __init__(self, state_dim, action_dim, hidden_dim=128):
-        super(EnergyModel, self).__init__()
-        self.network = nn.Sequential(
-            nn.Linear(state_dim + action_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.ReLU(),
-            nn.Linear(hidden_dim, 1)
-        )
-    
-    def forward(self, state, action):
-        x = torch.cat([state, action], dim=-1)
-        return self.network(x)
+from World_Model.Demo_model import Demo_WorldModel #as world_model
+from Density_model.Demo_model import Demo_EnergyModel #as energy_model
+
+####################
+###################
 
 def select_action_energy_model(energy_model, state, action_dim, num_samples=100):
     with torch.no_grad():
@@ -110,6 +89,8 @@ def run_experiment(world_model, energy_model, num_steps, retrain_interval, state
     return world_model, energy_model
 
 # Example usage
+
+
 state_dim = 10
 action_dim = 5
 world_model = WorldModel(state_dim, action_dim)
