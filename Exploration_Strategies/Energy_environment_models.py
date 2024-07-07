@@ -59,7 +59,6 @@ class TransformerDecoderModel(nn.Module):
         # Apply final linear layer
         output = self.fc(output)
 
-        #print(output.shape,"$$$$$$$$$")
         output = output.reshape(batch_size,seq_length, -1)
         
         

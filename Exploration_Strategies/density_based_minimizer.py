@@ -145,10 +145,8 @@ trained_energy_model = run_energy_experiment(energy_model, num_epochs=10, retrai
 terminal_state = next_states[:,-1,:].unsqueeze(0)
 
 print(terminal_state.shape,"#####")
-# print(jd)
 action_chosen = select_action_energy_model(energy_model, terminal_state, action_dim, seq_len=20,num_samples=100, action_min=-1, action_max=1)
-# print(action_chosen.shape," Actions chosen")
-# print(jd)
+
 actual_experiment_values = torch.randn(batch_size, sequence_length, state_dim)
 ### Push the actual values here.
 
