@@ -41,33 +41,27 @@ class TransformerDecoderModel(nn.Module):
         
         # Combine initial states and actions
         initial_states_expanded = initial_states.repeat(1, seq_length, 1)
-        #print(initial_states_expanded.shape,"#1")
         combined_input = torch.cat((initial_states_expanded, actions), dim=2)
-        #print(combined_input.shape,"#2")
         # Add positional encoding
         positions = torch.arange(0, seq_length).unsqueeze(0).repeat(batch_size, 1).to(combined_input.device)
         combined_input += self.pos_encoder(positions)
-        # print(positions.shape,self.pos_encoder(positions).shape,"#3")
-        # print(combined_input.shape,"#$$!#")
         # Create masks
         tgt_mask = self.generate_square_subsequent_mask(seq_length).to(combined_input.device)
         
         # Decoder forward pass
-        #print(combined_input.shape,initial_states_expanded.shape,tgt_mask.shape,"5")
         output = self.transformer_decoder(
             tgt=combined_input,
             memory=combined_input,  # Use combined_input as both tgt and memory
             tgt_mask=tgt_mask
         )
         output = output.view(-1, self.input_dim)
-        #print(output.shape,"$$$$$$$$$")
+        
         # Apply final linear layer
         output = self.fc(output)
 
         #print(output.shape,"$$$$$$$$$")
         output = output.reshape(batch_size,seq_length, -1)
-        #print(output.shape,"33333$$$$$$$$$")
-        #print(jd,"######")
+        
         
         return output
     

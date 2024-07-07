@@ -34,11 +34,6 @@ def select_action_energy_model(energy_model, state, action_dim,seq_len, num_samp
         # Repeat the state for each action sample
         state_repeated = state.repeat(num_samples, 1, 1)
         
-        # Reshape for the energy model
-        # state_flat = state_repeated.view(-1, state.shape[-1])
-        # action_flat = action_samples.view(-1, action_dim)
-        #print(jd)
-        # Compute energies
         energies = energy_model(state_repeated, action_samples)
         
         energies = torch.mean(energies, dim=(-2, -1))
@@ -52,7 +47,6 @@ def select_action_energy_model(energy_model, state, action_dim,seq_len, num_samp
         return best_actions
 def run_energy_experiment(energy_model,  retrain_interval, state_dim, action_dim, replay_buffer,
                           replay_buffer_size=1000, learning_rate=1e-3, batch_size=128, energy_margin=0, num_epochs=5):
-    # replay_buffer = ReplayBuffer(replay_buffer_size)
     energy_optimizer = optim.Adam(energy_model.parameters(), lr=learning_rate)
     action_min = torch.full((action_dim,), -1.0)
     action_max = torch.full((action_dim,), 1.0)
@@ -60,11 +54,9 @@ def run_energy_experiment(energy_model,  retrain_interval, state_dim, action_dim
     
     for epoch in range(num_epochs):
                 total_loss = 0
-                # print(len(replay_buffer) , batch_size,"######e")
-                # print(jklda)
+                
                 num_batches = len(replay_buffer) // batch_size#+1
-                # print(num_batches)
-                # print(jd)
+                
                 energy_loss=0
                 for _ in range(num_batches):
                     batch = replay_buffer.sample(batch_size)
@@ -72,9 +64,7 @@ def run_energy_experiment(energy_model,  retrain_interval, state_dim, action_dim
                     
                     initial_states = torch.cat(initial_states, dim=0)
                     actions = torch.cat(actions, dim=0)
-                    #print(initial_states.shape,actions.shape,"####")
-                    #print(jd)
-                    # print(initial_states.shape,"####")
+                    
                     real_state_energy = energy_model(initial_states, actions)
                     neg_actions = torch.randn_like(actions)
                     unreal_state_energy = energy_model(initial_states, neg_actions)
@@ -122,7 +112,8 @@ def run_environment_experiment(world_model, energy_model, replay_buffer, num_ste
         
         # Print average MSE after each epoch
         avg_mse = sum(epoch_losses) / num_epochs
-        print(f"Averaged MSE {avg_mse:.4f}")
+        #print(f"Averaged MSE {avg_mse:.4f}")
+    print(f"Averaged MSE {avg_mse:.4f}")
     
     return world_model
 # Example usage
